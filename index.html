@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+    <style>
+        /* CSS styles */
+        
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            margin: 50px auto;
+        }
+        
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 40px;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .cell:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="board" onclick="handleMove(event)">
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+    </div>
+
+    <script>
+        let currentPlayer = 'X';
+        const cells = document.querySelectorAll('[data-cell]');
+        let gameActive = true;
+
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+
+        const handleMove = (event) => {
+            const cell = event.target;
+            const currentClass = currentPlayer === 'X' ? 'x' : 'o';
+
+            if (gameActive && !cell.textContent) {
+                cell.textContent = currentPlayer;
+                cell.classList.add(currentClass);
+
+                if (checkWin(currentPlayer)) {
+                    announceWinner(currentPlayer);
+                    gameActive = false;
+                } else if (isDraw()) {
+                    announceDraw();
+                    gameActive = false;
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                }
+            }
+        };
+
+        const checkWin = (player) => {
+            return winningConditions.some((condition) => {
+                return condition.every((index) => {
+                    return cells[index].textContent === player;
+                });
+            });
+        };
+
+        const isDraw = () => {
+            return [...cells].every((cell) => {
+                return cell.textContent === 'X' || cell.textContent === 'O';
+            });
+        };
+
+        const announceWinner = (player) => {
+            alert(`Player ${player} wins!`);
+        };
+
+        const announceDraw = () => {
+            alert('It\'s a draw!');
+        };
+    </script>
+</body>
+
+</html>
